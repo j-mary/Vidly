@@ -1,0 +1,25 @@
+﻿@model Vidly.ViewModel.RandomMovieViewModel
+@{
+    ViewBag.Title = "Random";
+}
+
+<h2 class="text-info">@Model.Movie.Name</h2>
+
+@{
+    var className = Model.Customers.Count == 0 ? "text-danger" : null;
+}
+
+
+@if (Model.Customers.Count == 0)
+{
+    <p class="@className">No one has rented this Movie before</p>
+}
+else
+{
+    <ul>
+        @foreach (var customer in Model.Customers)
+        {
+        <li class="text-primary">@customer.Name</li>
+        }
+    </ul>
+}

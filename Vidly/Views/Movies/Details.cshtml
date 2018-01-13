@@ -1,0 +1,24 @@
+﻿@model Vidly.Models.Movie
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dd>
+            <h1>@Html.DisplayFor(model => model.Name)</h1>
+        </dd>
+        <ul>
+            <li><h5>Genre: @Model.Genre.Name</h5></li>
+            <li><h5>Release Date: @Model.ReleaseDate.ToLongDateString()</h5></li>
+            <li><h5>Date Added: @Model.DateAdded.ToLongDateString()</h5></li>
+            <li><h5>Number in Stock: @Model.NumberInStock</h5></li>
+        </ul>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
