@@ -6,6 +6,7 @@ using Vidly.Models;
 using Vidly.ViewModel;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
+using System.Web.Security;
 
 namespace Vidly.Controllers
 {
@@ -25,7 +26,10 @@ namespace Vidly.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            if (User.IsInRole(RoleName.CanManageMovies))
+                return View("List");
+            
+            return View("ReadOnlyList");
         }
 
         public ActionResult Details(int id)
@@ -38,7 +42,8 @@ namespace Vidly.Controllers
             return View(movies);
         }
 
-        public ActionResult New()
+        [Authorize(Roles = RoleName.CanManageMovies)]
+        public ViewResult New()
         {
             var genre = _context.Genres.ToList();
             var viewModel = new MovieFormViewModel
@@ -49,7 +54,9 @@ namespace Vidly.Controllers
             return View("MovieForm", viewModel);
         }
 
+
         [HttpPost]
+        [Authorize(Roles = RoleName.CanManageMovies)]
         [ValidateAntiForgeryToken]
         public ActionResult Save(Movie movie)
         {
@@ -77,20 +84,12 @@ namespace Vidly.Controllers
                 movieInDb.NumberInStock = movie.NumberInStock;
             }
 
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch (DbEntityValidationException e)
-            {
-                Console.WriteLine(e);
-            }
-
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Movies");
         }
 
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult Edit(int id)
         {
             var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
